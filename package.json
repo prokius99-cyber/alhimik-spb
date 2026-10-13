@@ -1,0 +1,21 @@
+{
+  "name": "premiumsite-landing",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4331",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4332",
+    "gate": "node scripts/ps.mjs gate",
+    "check": "astro build && node scripts/ps.mjs gate --url http://localhost:4332"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "@fontsource-variable/ysabeau-office": "^5.3.0",
+    "@fontsource/oranienbaum": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^7.3.0",
+    "tailwindcss": "^4.3.0"
+  }
+}

@@ -1,0 +1,116 @@
+/*
+ * Токены дизайн-системы «Алхимик · Спуск». Значения — только из DESIGN.md (разделы 2, 3, 5, 6, С2).
+ * Две зоны: улица (:root — hero, visit) и подвал ([data-zone="cellar"] — lab, elixirs, reviews, banquets).
+ * Зона переопределяет те же роли цвета, компоненты пишут только var(--c-…).
+ * Светлых линий-разделителей в системе нет: токена --rule нет намеренно (ПРИОРИТЕТ).
+ * Шрифты (самохостинг, 3 woff2) — импорт в src/layouts/Base.astro:
+ *   @fontsource/oranienbaum/cyrillic-400.css
+ *   @fontsource-variable/ysabeau-office/wght.css   (грузит cyrillic + latin)
+ *   preload: oranienbaum-cyrillic-400-normal.woff2, ysabeau-office-cyrillic-wght-normal.woff2
+ */
+:root {
+  color-scheme: dark;
+
+  /* цвет — зона «улица» (контраст к --c-bg #10172a) */
+  --c-bg: #10172a;            /* ночь; theme-color */
+  --c-surface: #1b2547;       /* низ неба, тротуар */
+  --c-text: #efe6da;          /* 14.43 · к surface 12.12 */
+  --c-muted: #9aa6bf;         /* 7.28 · к surface 6.12 */
+  --c-border: #26335f;        /* рамы и подложки, не линия-разделитель */
+  --c-accent: #b0583a;        /* brand · photos · H 39°; 3.65 к фону (UI) */
+  --c-accent-hover: #9e4f34;
+  --c-on-accent: #ffffff;     /* 4.88 · на hover 5.80 */
+  --c-accent-text: #f2a64a;   /* свет: ссылки, метка, фокус; 8.77 */
+  --c-secondary: #f2a64a;     /* одна роль: свет окна и двери */
+  --c-danger: #e5766a;        /* 6.05 */
+
+  /* предметы сцены */
+  --c-frame: #0a0e1d;         /* рама окна */
+  --c-night-deep: #0a0f1e;
+  --c-plaster: #c19a64;       /* цвет, в который заливает свет двери */
+  --c-shelf: #3a2416;         /* доска полки в elixirs */
+  --c-amber: #f2a64a;         /* свет гирлянды в банках elixirs: в зоне cellar --c-secondary темнеет */
+  --c-sign: #1b2d63;          /* эмаль таблички улицы (сцена v3) */
+  --c-sign-deep: #142251;     /* низ эмали и тёмный кант */
+  --c-sign-text: #b9c6e6;     /* надпись таблички, контраст к эмали 8+ */
+  --c-sign-screw: #070b18;    /* болты таблички */
+
+  /* типографика */
+  --f-display: 'Oranienbaum', Georgia, 'Times New Roman', serif;            /* 400, строчные */
+  --f-body: 'Ysabeau Office Variable', 'Segoe UI', system-ui, sans-serif;  /* 400–700 */
+  --t-hero: min(clamp(4rem, 20vw, 11.875rem), 21svh);
+  --t-hero-lh: 0.98;
+  --t-hero-ls: 0;
+  --t-h2: clamp(2.75rem, 4vw + 1.5rem, 5.25rem);
+  --t-h2-lh: 1.02;
+  --t-h3: clamp(1.25rem, 0.6vw + 1.05rem, 1.5rem);
+  --t-lead: clamp(1.1875rem, 0.5vw + 1rem, 1.375rem);
+  --t-body: 1.125rem;
+  --t-body-lh: 1.5;
+  --t-small: 1rem;
+  --t-label: clamp(1rem, 1.4vw, 1.1875rem);
+  --t-label-ls: 0.32em;
+  --t-btn: 1.1875rem;
+  --t-btn-ls: 0.16em;
+  --measure: 34em;
+
+  /* пространство: геометрическая шкала */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-6: 1.5rem;
+  --s-8: 2rem; --s-12: 3rem; --s-16: 4rem; --s-24: 6rem; --s-32: 8rem;
+  --section-y: clamp(4.5rem, 12vw, 9.375rem);
+  --content-max: 75rem;
+  --gutter: clamp(1rem, 4vw, 5rem);
+
+  /* форма */
+  --r-sm: 2px; --r-md: 3px; --r-lg: 10px; --r-pill: 999px; /* pill не используется */
+  --r-arch: 50% 50% 0 0;
+  --tap: 48px;
+  --btn-h: 56px;
+
+  /* глубина и свет */
+  --shadow-object: 0 8px 14px rgb(0 0 0 / 0.5);
+  --glow-btn: 0 10px 30px rgb(176 88 58 / 0.3);
+  --glow-window: 0 0 50px 8px rgb(255 150 40 / 0.5), 0 0 140px 50px rgb(255 120 30 / 0.26), 0 0 280px 110px rgb(255 100 20 / 0.12);
+  --glow-door: 0 0 40px 8px rgb(255 140 40 / 0.22);
+  --grain-opacity: 0.22;
+
+  /* сцена спуска */
+  --win-w: 400px; --win-h: 212px;
+  --descent-h: 190svh;
+  --descent-zoom: 4.2;
+
+  /* движение */
+  --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --d-micro: 160ms; --d-state: 240ms; --d-enter: 500ms;
+  --d-ignite: 700ms; --d-draw: 600ms; --flicker: 5s;
+}
+
+/* зона «внутри»: штукатурка, чернила, медь */
+[data-zone="cellar"] {
+  color-scheme: light;
+  --c-bg: #c19a64;            /* охристая штукатурка */
+  --c-surface: #efe0c8;       /* бирдекель, рама фото */
+  --c-text: #1c120c;          /* 7.07 · на самой тёмной фактуре #b08a56 5.80 */
+  --c-muted: #3d2b1c;         /* 5.17 — только над светлым пятном */
+  --c-border: #5b4128;        /* нарисованные знаки, декор */
+  --c-accent: #7a3c22;        /* медь H 42°; 3.23 к штукатурке (UI) */
+  --c-accent-hover: #6a3219;
+  --c-on-accent: #fbefe3;     /* 7.43 · на hover 8.91 */
+  --c-accent-text: #5a170c;   /* 5.17 */
+  --c-secondary: #d8aa6e;     /* свет лампы; ink на нём 8.67 */
+  --c-danger: #5a170c;        /* 5.17 */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --t-label-ls: 0.24em;
+    --win-w: 250px; --win-h: 170px;  /* одна рама без переплёта */
+    --descent-zoom: 2.4;
+    --descent-h: 160svh;      /* на телефоне короче: меньше пустой штукатурки после заливки */
+  }
+}
+
+@media (max-width: 359px) {
+  :root { --win-w: 188px; --win-h: 150px; }
+}

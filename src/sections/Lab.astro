@@ -1,0 +1,123 @@
+---
+/**
+ * «Вы спускаетесь в цоколь» (DESIGN.md §5 lab): штукатурка, пятно лампы слева сверху, текст слева,
+ * на стене справа две рамы с фото и нарисованные знаки стихий. Знаки прорисовываются один раз при входе в вид.
+ */
+import { Image } from 'astro:assets';
+import turks from '../assets/photos/site-07.jpg';
+import shelf from '../assets/photos/site-03.jpg';
+
+// знаки стихий: огонь, вода, воздух, земля; pathLength=1 для stroke-dashoffset
+const signs = {
+  fire: ['M50 14 L88 80 L12 80 Z'],
+  water: ['M12 20 L88 20 L50 86 Z'],
+  air: ['M50 14 L88 80 L12 80 Z', 'M26 56 L74 56'],
+  earth: ['M12 20 L88 20 L50 86 Z', 'M28 44 L72 44'],
+};
+---
+<section id="lab" data-section="lab" data-zone="cellar" aria-labelledby="lab-title" class="lab section-y">
+  <div class="lab-wall" aria-hidden="true"></div>
+  <div class="container-x lab-grid">
+    <div class="lab-text">
+      <h2 id="lab-title">Вы спускаетесь в&nbsp;цоколь</h2>
+      <p class="lead">Под потолком висят медные турки, на&nbsp;полках стоят склянки и&nbsp;аптекарские банки с&nbsp;латинскими этикетками. Атмосфера алхимии позднего Средневековья: тёмное дерево, тёплый свет.</p>
+      <p>Четыре стихии, эликсиры и&nbsp;странники&nbsp;— так таверна пишет о&nbsp;себе в&nbsp;VK. «Вот уже 14&nbsp;лет мы приоткрываем для вас наше таинство»&nbsp;— пост от&nbsp;31&nbsp;декабря 2023&nbsp;года.</p>
+    </div>
+
+    <div class="lab-frames">
+      <figure class="frame frame-a">
+        <Image src={turks} alt="Медные турки для кофе, подвешенные под потолком таверны, в тёплом свете" width={640} height={426} widths={[320, 480, 640]} sizes="(max-width: 767px) 80vw, 340px" loading="lazy" />
+      </figure>
+
+      <svg class="sign sign-main" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <circle class="stroke" cx="50" cy="50" r="46" pathLength="1" />
+        {signs.fire.map((d) => <path class="stroke" d={d} pathLength="1" />)}
+      </svg>
+
+      <figure class="frame frame-b">
+        <Image src={shelf} alt="Деревянная полка с аптекарскими банками: NITRUM, склянки и колбы с латинскими этикетками" width={640} height={480} widths={[320, 480, 640]} sizes="(max-width: 767px) 80vw, 340px" loading="lazy" />
+      </figure>
+
+      <svg class="sign sign-water" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        {signs.water.map((d) => <path class="stroke" d={d} pathLength="1" />)}
+      </svg>
+      <svg class="sign sign-air" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        {signs.air.map((d) => <path class="stroke" d={d} pathLength="1" />)}
+      </svg>
+      <svg class="sign sign-earth" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        {signs.earth.map((d) => <path class="stroke" d={d} pathLength="1" />)}
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lab { position: relative; background: var(--tex-plaster), var(--c-bg); isolation: isolate; overflow: clip; }
+  /* сразу за спуском: заголовок ближе к верху, финальный кадр сцены и так даёт паузу */
+  .lab.section-y { padding-top: var(--s-8); }
+
+  /* стена: пятно лампы слева сверху + фактура штукатурки (feTurbulence, не темнее #b08a56 под текстом) */
+  .lab-wall { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse 60% 60% at 18% 42%, var(--c-secondary) 0%, transparent 70%); }
+
+  .lab-grid { display: grid; gap: var(--s-16); align-items: center; }
+  .lab-text { max-width: var(--measure); display: grid; gap: var(--s-6); }
+  .lab-text h2 { margin-bottom: var(--s-2); }
+  .lab-text p { margin: 0; }
+  .lead { font-size: var(--t-lead); line-height: 1.4; font-weight: 500; }
+
+  .lab-frames { position: relative; display: grid; gap: var(--s-8); padding-bottom: var(--s-8); }
+  .frame { margin: 0; width: min(82%, 21rem); background: var(--c-surface); padding: 10px;
+    border-radius: var(--r-md); box-shadow: var(--shadow-object); position: relative; z-index: 1; }
+  .frame :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-sm); }
+  .frame-a { justify-self: start; transform: rotate(-2deg); }
+  .frame-a :global(img) { object-position: 60% 40%; }
+  .frame-b { justify-self: end; transform: rotate(2deg); }
+  .frame-b :global(img) { object-position: 55% 0%; aspect-ratio: 1 / 1; }
+
+  .sign { position: absolute; width: 5.5rem; height: 5.5rem; color: var(--c-border); z-index: 0; }
+  .sign-main { width: 6.5rem; height: 6.5rem; top: 50%; left: 50%; translate: -50% -50%; z-index: 2; }
+  .sign-water { width: 4rem; height: 4rem; top: -1.5rem; right: 4%; }
+  .sign-air { width: 3.5rem; height: 3.5rem; bottom: -0.5rem; left: 2%; }
+  .sign-earth { display: none; }
+  .stroke { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 1; stroke-dashoffset: 0; }
+  /* до входа в вид (только при работающем JS и без reduced-motion) знаки не нарисованы */
+  .lab.armed .stroke { stroke-dashoffset: 1; }
+  .lab.armed.drawn .stroke { stroke-dashoffset: 0; transition: stroke-dashoffset var(--d-draw) var(--e-out); }
+  .lab.armed.drawn .sign-main .stroke { transition-delay: 0ms; }
+  .lab.armed.drawn .sign-water .stroke { transition-delay: 200ms; }
+  .lab.armed.drawn .sign-air .stroke { transition-delay: 380ms; }
+  .lab.armed.drawn .sign-earth .stroke { transition-delay: 520ms; }
+
+  @media (min-width: 768px) {
+    .lab-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-12); }
+    .lab-frames { min-height: 34rem; display: block; padding: 0; }
+    .frame { position: absolute; width: min(64%, 22rem); }
+    .frame-a { top: 0; left: 2%; }
+    .frame-b { bottom: 0; right: 0; width: min(58%, 20rem); }
+    .sign-main { width: 8rem; height: 8rem; top: 58%; left: 15%; }
+    .sign-water { top: auto; bottom: 3%; left: 28%; right: auto; }
+    .sign-air { top: -1.5rem; bottom: auto; left: 40%; }
+    .sign-earth { display: block; width: 4rem; height: 4rem; top: 6%; right: 6%; }
+  }
+  @media (min-width: 1280px) {
+    .lab-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-24); }
+    .lab-frames { min-height: 40rem; }
+    .frame-a { width: min(68%, 24rem); }
+    .frame-b { width: min(62%, 22rem); }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var el = document.getElementById('lab');
+    if (!el || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.classList.add('armed');
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { el.classList.add('drawn'); io.disconnect(); }
+    }, { threshold: 0.3 });
+    io.observe(el.querySelector('.lab-frames'));
+  })();
+</script>

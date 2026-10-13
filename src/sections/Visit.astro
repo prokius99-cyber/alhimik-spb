@@ -1,0 +1,158 @@
+---
+/**
+ * «Как найти»: гость выходит из подвала обратно на Туристскую.
+ * Верх секции — силуэт ступеней вверх (ночь поднимается из света дальнего зала).
+ * Карта Яндекса грузится только по нажатию (логика модуля map-card).
+ */
+import { business } from '../data/site';
+
+const { lat, lon } = business.geo;
+const widget = `https://yandex.ru/map-widget/v1/?ll=${lon}%2C${lat}&z=16&pt=${lon}%2C${lat}%2Cpm2rdm`;
+const tel = `tel:${business.phone.e164}`;
+
+// ступени: слева низко, справа высоко; на каждой высота calc(rise * k)
+const N = 7;
+const poly: string[] = [];
+for (let i = 0; i < N; i++) {
+  const h = `calc(var(--rise) * ${((N - 1 - i) / N).toFixed(4)})`;
+  poly.push(`${(i * 100 / N).toFixed(3)}% ${h}`, `${((i + 1) * 100 / N).toFixed(3)}% ${h}`);
+}
+const clip = `polygon(${poly.join(', ')}, 100% 100%, 0 100%)`;
+---
+<section id="visit" data-section="visit" aria-labelledby="visit-title" class="visit">
+  <div class="night" style={`clip-path:${clip}`}>
+    <div class="container-x grid">
+      <div class="info">
+        <p class="sign"><span>Туристская ул.</span></p>
+        <h2 id="visit-title">Как нас найти</h2>
+        <p class="addr">Савушкина,&nbsp;143&nbsp;к1</p>
+        <p class="lead">цокольный этаж, вход со&nbsp;стороны Туристской</p>
+        <ul class="facts">
+          <li>метро&nbsp;<strong>{business.metro}</strong></li>
+          <li>{business.hoursDisplay}</li>
+          <li><a class="link tel nowrap" href={tel}>{business.phone.display}</a></li>
+        </ul>
+      </div>
+
+      <div class="map" data-map={widget}>
+        <div class="frame">
+          <div class="pane">
+            <p class="muted hint">Карта Яндекса загрузится только после нажатия</p>
+            <button type="button" class="link load">Показать карту</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="routes">
+        <a class="btn route" href={business.links.yandexMaps} target="_blank" rel="noopener">
+          <span class="door" aria-hidden="true"></span>Маршрут в&nbsp;Яндекс.Картах
+        </a>
+        <a class="link" href={business.links.twoGis} target="_blank" rel="noopener">Открыть в&nbsp;2ГИС</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('#visit [data-map]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = box.dataset.map ?? '';
+      f.title = 'Карта: Савушкина, 143 к1';
+      f.loading = 'lazy';
+      f.setAttribute('allowfullscreen', '');
+      const pane = box.querySelector('.pane');
+      pane?.replaceChildren(f);
+      pane?.classList.add('live');
+    });
+  });
+</script>
+
+<style>
+  .visit {
+    --rise: var(--s-12);
+    background: var(--tex-plaster), var(--c-plaster);
+    color: var(--c-text);
+  }
+  @media (min-width: 768px) { .visit { --rise: var(--s-24); } }
+
+  .night {
+    background: var(--c-bg);
+    padding-top: calc(var(--rise) + var(--section-y));
+    padding-bottom: var(--section-y);
+    overflow: hidden;
+  }
+  .grid {
+    display: grid; gap: var(--s-8);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "info" "routes" "map";
+  }
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      grid-template-areas: "info map" "info routes";
+      column-gap: var(--s-16); row-gap: var(--s-6); align-items: start;
+    }
+  }
+  .info { grid-area: info; }
+  .map { grid-area: map; }
+  .routes { grid-area: routes; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-8); }
+
+  /* табличка улицы, как в сцене первого экрана */
+  .sign {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    min-height: var(--s-12); padding: 0 var(--s-8); margin: 0 0 var(--s-8);
+    background: linear-gradient(180deg, var(--c-sign), var(--c-sign-deep));
+    color: var(--c-sign-text); font: 600 var(--t-small)/1 var(--f-body); letter-spacing: 0.04em;
+    border-radius: var(--r-md);
+    box-shadow: inset 0 0 0 var(--s-1) var(--c-sign-deep), var(--shadow-object);
+  }
+  .sign::before, .sign::after {
+    content: ""; position: absolute; top: 50%; width: var(--s-2); height: var(--s-2); border-radius: 50%;
+    background: var(--c-sign-screw); transform: translateY(-50%);
+  }
+  .sign::before { left: var(--s-2); }
+  .sign::after { right: var(--s-2); }
+
+  h2 {
+    font: 400 var(--t-h2)/var(--t-h2-lh) var(--f-display); margin: 0 0 var(--s-6);
+    text-shadow: 0 0 var(--s-8) color-mix(in srgb, var(--c-secondary) 35%, transparent);
+  }
+  .addr {
+    font: 400 clamp(2.25rem, 5vw + 0.5rem, 4rem)/1.05 var(--f-display);
+    margin: 0 0 var(--s-3); color: var(--c-accent-text);
+  }
+  .lead { font-size: var(--t-lead); line-height: 1.4; margin: 0 0 var(--s-8); max-width: var(--measure); }
+  .facts { list-style: none; margin: 0 0 var(--s-6); padding: 0; display: grid; gap: var(--s-2); font-size: var(--t-body); }
+  .facts strong { font-weight: 600; }
+  .tel { font-weight: 600; font-variant-numeric: tabular-nums; font-size: var(--t-lead); }
+
+  /* карта в раме окна сцены */
+  .frame {
+    position: relative; padding: 9px; background: var(--c-frame); border-radius: var(--r-md);
+    box-shadow: var(--shadow-object);
+  }
+  .frame::before {  /* приглушённое свечение окна */
+    content: ""; position: absolute; inset: 0; border-radius: var(--r-md);
+    box-shadow: var(--glow-window); opacity: 0.4; pointer-events: none;
+  }
+  .pane {
+    position: relative; min-height: 22rem; display: grid; place-items: center; align-content: center; gap: var(--s-6);
+    padding: var(--s-6); text-align: center;
+    background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--c-secondary) 22%, transparent), transparent 70%), var(--c-surface);
+    border-radius: var(--r-sm); overflow: hidden;
+  }
+  .pane.live { padding: 0; display: block; }
+  .pane :global(iframe) { display: block; width: 100%; height: 22rem; border: 0; }
+  @media (min-width: 900px) { .pane, .pane :global(iframe) { min-height: 28rem; height: 28rem; } }
+  .hint { margin: 0; font-size: var(--t-small); max-width: 20em; }
+  .load { max-width: 100%; padding: 0 var(--s-8); cursor: pointer; border: 0; background: none; font: inherit; font-weight: 600; font-size: var(--t-lead); }
+
+  .route { gap: var(--s-3); padding: 0 var(--s-6); max-width: 100%; text-align: center; line-height: 1.2; letter-spacing: 0.08em; }
+  @media (max-width: 767px) { .route { width: 100%; font-size: var(--t-small); letter-spacing: 0.06em; } }
+  /* дверь-иконка: повтор сигнатуры, без анимации */
+  .door {
+    flex: none; width: var(--s-4); height: var(--s-6); border-radius: var(--r-arch);
+    background: var(--c-secondary); box-shadow: var(--glow-door);
+  }
+</style>

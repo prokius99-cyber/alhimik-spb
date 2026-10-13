@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.premiumsite/shots/
+.premiumsite/RUN
+.premiumsite/.block-count
+pitch/*.mp4
+
+# Материалы разведки и процесса — не для публичного репозитория
+# (почта администратора группы, выгрузка постов VK с именами подписчиков, сырые фото)
+.premiumsite/
+analysis.md
+photos/
+*.log

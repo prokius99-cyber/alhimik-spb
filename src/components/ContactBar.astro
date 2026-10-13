@@ -1,0 +1,29 @@
+---
+/**
+ * Закреплённая кнопка звонка на телефоне (DESIGN.md §4): появляется после выхода из первого экрана,
+ * где есть своя кнопка. Скрыта на ширине ≥ 768px. Без JS видна всегда.
+ */
+import { business } from '../data/site';
+---
+<div class="pin" data-pin data-zone="cellar">
+  <a class="btn pin-call" href={`tel:${business.phone.e164}`} data-cta-call>
+    <span>Занять стол</span>
+    <span class="pin-tel num nowrap">{business.phone.display}</span>
+  </a>
+</div>
+<script>
+  const pin = document.querySelector<HTMLElement>('[data-pin]');
+  const hero = document.getElementById('hero');
+  if (pin && hero) {
+    pin.classList.add('is-hidden');
+    new IntersectionObserver(([e]) => pin.classList.toggle('is-hidden', e.isIntersecting), { threshold: 0.15 }).observe(hero);
+  }
+</script>
+<style>
+  .pin { background: none; position: fixed; z-index: 60; left: var(--s-4); right: var(--s-4); bottom: calc(var(--s-4) + env(safe-area-inset-bottom)); transition: opacity var(--d-state) var(--e-out), transform var(--d-state) var(--e-out); }
+  .pin.is-hidden { opacity: 0; transform: translateY(24px); pointer-events: none; visibility: hidden; }
+  .pin-call { width: 100%; min-height: 60px; padding: var(--s-2) var(--s-4); flex-direction: column; gap: 2px; line-height: 1.1; }
+  .pin-tel { letter-spacing: 0.02em; text-transform: none; font-weight: 600; font-size: var(--t-small); }
+  :global(html[data-descent-past]) .pin.is-hidden { opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+  @media (min-width: 768px) { .pin { display: none; } }
+</style>

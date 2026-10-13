@@ -1,0 +1,234 @@
+---
+/** «Что наливают»: полка с банками-категориями. Факты — analysis.md (22 сорта пива, отзывы 2ГИС). */
+import { business } from '../data/site';
+
+interface Jar {
+  id: string;
+  latin: string;
+  title: string;
+  detail: string;
+  h: number;
+  body: string;
+  lid: string;
+  lidClass: string;
+  liquidTop: number;
+  liquid: string;
+  labelTop: number;
+  tilt: string;
+}
+
+const jars: Jar[] = [
+  {
+    id: 'cerevisia', latin: 'CEREVISIA', title: 'Пиво',
+    detail: '22 сорта разливного и бутылочного пива европейских семейных пивоварен',
+    h: 440, liquidTop: 150, liquid: 'beer', labelTop: 112, tilt: '-1.5deg', lidClass: 'lid-dark',
+    body: 'M34 96 Q34 84 46 80 L174 80 Q186 84 186 96 L186 424 Q186 436 172 436 L48 436 Q34 436 34 424 Z',
+    lid: 'M38 46 H182 Q188 46 188 52 V76 Q188 82 182 82 H38 Q32 82 32 76 V52 Q32 46 38 46 Z',
+  },
+  {
+    id: 'tincturae', latin: 'TINCTURAE', title: 'Наливки и ликёры',
+    detail: '«Вкусные наливки и коктейли» — из отзывов на 2ГИС',
+    h: 480, liquidTop: 230, liquid: 'tincture', labelTop: 262, tilt: '1.2deg', lidClass: 'lid-copper',
+    body: 'M86 70 L134 70 L134 130 C134 160 196 190 196 280 L196 440 Q196 468 168 468 L52 468 Q24 468 24 440 L24 280 C24 190 86 160 86 130 Z',
+    lid: 'M82 40 H138 Q142 40 142 44 V68 H78 V44 Q78 40 82 40 Z',
+  },
+  {
+    id: 'vinum', latin: 'VINUM', title: 'Вино и коктейли',
+    detail: 'Коктейли в отзывах на 2ГИС хвалят вместе с наливками',
+    h: 500, liquidTop: 250, liquid: 'wine', labelTop: 262, tilt: '-1deg', lidClass: 'lid-dark',
+    body: 'M90 44 L130 44 L130 140 C130 180 202 190 202 260 L202 476 Q202 492 184 492 L36 492 Q18 492 18 476 L18 260 C18 190 90 180 90 140 Z',
+    lid: 'M92 14 H128 Q132 14 132 18 V46 H88 V18 Q88 14 92 14 Z',
+  },
+  {
+    id: 'coffea', latin: 'COFFEA', title: 'Кофе и чай',
+    detail: 'Горячие напитки: кофе, чай',
+    h: 360, liquidTop: 110, liquid: 'coffee', labelTop: 92, tilt: '1.6deg', lidClass: 'lid-copper',
+    body: 'M26 80 Q26 64 44 64 L176 64 Q194 64 194 80 L194 336 Q194 352 176 352 L44 352 Q26 352 26 336 Z',
+    lid: 'M32 30 H188 Q194 30 194 36 V60 Q194 66 188 66 H32 Q26 66 26 60 V36 Q26 30 32 30 Z',
+  },
+  {
+    id: 'culina', latin: 'CULINA', title: 'Европейская кухня',
+    detail: 'Пивные закуски, салаты, мясо, рыба, паста, суп, десерты. Судака часто вспоминают в отзывах',
+    h: 540, liquidTop: 170, liquid: 'kitchen', labelTop: 168, tilt: '-1.3deg', lidClass: 'lid-dark',
+    body: 'M52 70 L168 70 L168 96 C198 112 198 130 198 150 L198 516 Q198 532 180 532 L40 532 Q22 532 22 516 L22 150 C22 130 22 112 52 96 Z',
+    lid: 'M48 38 H172 Q176 38 176 42 V70 H44 V42 Q44 38 48 38 Z',
+  },
+];
+
+const liquids = [
+  { id: 'beer', top: 'var(--c-amber)', bottom: 'color-mix(in srgb, var(--c-amber) 70%, var(--c-accent))' },
+  { id: 'tincture', top: 'color-mix(in srgb, var(--c-amber) 40%, var(--c-accent))', bottom: 'color-mix(in srgb, var(--c-accent) 85%, var(--c-shelf))' },
+  { id: 'wine', top: 'color-mix(in srgb, var(--c-accent) 70%, var(--c-shelf))', bottom: 'color-mix(in srgb, var(--c-accent) 35%, var(--c-shelf))' },
+  { id: 'coffee', top: 'color-mix(in srgb, var(--c-shelf) 70%, var(--c-accent))', bottom: 'var(--c-shelf)' },
+  { id: 'kitchen', top: 'color-mix(in srgb, var(--c-amber) 80%, var(--c-surface))', bottom: 'color-mix(in srgb, var(--c-amber) 80%, var(--c-accent))' },
+];
+
+const phone = business.phone;
+---
+<section id="elixirs" data-section="elixirs" data-zone="cellar" aria-labelledby="elixirs-title" class="section-y elixirs">
+  <div class="container-x head">
+    <h2 id="elixirs-title">Что наливают</h2>
+    <p class="lead">Пиво, наливки, вино, кофе и&nbsp;европейская кухня&nbsp;— всё стоит на&nbsp;этой полке.</p>
+  </div>
+
+  <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      {liquids.map((l) => (
+        <linearGradient id={`elx-liq-${l.id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style={`stop-color:${l.top}`} />
+          <stop offset="1" style={`stop-color:${l.bottom}`} />
+        </linearGradient>
+      ))}
+      <linearGradient id="elx-glass" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" style="stop-color:var(--c-surface);stop-opacity:.42" />
+        <stop offset=".22" style="stop-color:var(--c-surface);stop-opacity:.1" />
+        <stop offset=".7" style="stop-color:var(--c-surface);stop-opacity:.06" />
+        <stop offset="1" style="stop-color:var(--c-text);stop-opacity:.34" />
+      </linearGradient>
+      {jars.map((j) => (
+        <clipPath id={`elx-clip-${j.id}`}><path d={j.body} /></clipPath>
+      ))}
+    </defs>
+  </svg>
+
+  <div class="shelf" role="region" aria-label="Полка с банками: пиво, наливки, вино, кофе, кухня" tabindex="0">
+    <ul class="track" role="list">
+      {jars.map((j) => (
+        <li class="jar" style={`--label-top:${(j.labelTop / j.h) * 100}%; --tilt:${j.tilt}`}>
+          <svg class="glass" viewBox={`0 0 220 ${j.h}`} width="220" height={j.h} aria-hidden="true" focusable="false">
+            <path class="lid" d={j.lid} data-lid={j.lidClass} />
+            <g clip-path={`url(#elx-clip-${j.id})`}>
+              <rect x="0" y={j.liquidTop} width="220" height={j.h - j.liquidTop} fill={`url(#elx-liq-${j.liquid})`} opacity=".92" />
+              <ellipse cx="110" cy={j.liquidTop} rx="100" ry="6" class="meniscus" />
+            </g>
+            <path class="body" d={j.body} fill="url(#elx-glass)" />
+            <path class="blink" d={`M46 ${j.liquidTop - 10} Q40 ${j.liquidTop - 10} 40 ${j.liquidTop} L40 ${j.h - 40} Q40 ${j.h - 30} 46 ${j.h - 30} Q52 ${j.h - 30} 52 ${j.h - 40} L52 ${j.liquidTop} Q52 ${j.liquidTop - 10} 46 ${j.liquidTop - 10} Z`} />
+          </svg>
+          <div class="label">
+            <p class="latin" aria-hidden="true">{j.latin}</p>
+            <h3>{j.title}</h3>
+            <p class="detail">{j.detail}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="container-x actions">
+    <a class="btn" href={`tel:${phone.e164}`}>Занять стол</a>
+    <a class="link nowrap" href={`tel:${phone.e164}`}>{phone.display}</a>
+  </div>
+</section>
+
+<style>
+  .elixirs {
+    background-image: var(--tex-plaster), radial-gradient(ellipse 70% 55% at 50% 72%, color-mix(in srgb, var(--c-secondary) 80%, transparent), transparent 70%);
+    overflow-x: clip;
+  }
+  .head { margin-bottom: var(--s-12); }
+  .lead {
+    margin: var(--s-4) 0 0;
+    max-width: var(--measure);
+    font-size: var(--t-lead);
+    line-height: 1.4;
+    color: var(--c-muted);
+  }
+  .defs { position: absolute; }
+
+  .shelf {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    padding-top: var(--s-6);
+  }
+  .shelf::-webkit-scrollbar { display: none; }
+  .shelf:focus-visible { outline: 2px solid var(--c-accent-text); outline-offset: -4px; }
+
+  .track {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: var(--s-4);
+    width: max-content;
+    min-width: 100%;
+    margin: 0;
+    padding: 0 var(--gutter) var(--s-6);
+    list-style: none;
+  }
+  /* доска — предмет, тёмная плоскость */
+  .track::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: var(--s-6);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--c-shelf) 80%, var(--c-accent)) 0 28%, var(--c-shelf) 28%);
+    box-shadow: var(--shadow-object);
+  }
+
+  .jar {
+    position: relative;
+    flex: 0 0 clamp(14rem, 17vw, 15rem);
+    scroll-snap-align: start;
+  }
+  /* янтарная подсветка снизу — свет гирлянды на доске */
+  .jar::before {
+    content: '';
+    position: absolute;
+    left: -8%; right: -8%; bottom: calc(-1 * var(--s-6));
+    height: 130px;
+    background: radial-gradient(ellipse 50% 60% at 50% 100%, color-mix(in srgb, var(--c-amber) 85%, transparent), transparent 75%);
+    pointer-events: none;
+  }
+  .glass { position: relative; display: block; width: 100%; height: auto; }
+  .lid { fill: var(--c-shelf); }
+  .lid[data-lid='lid-copper'] { fill: var(--c-accent); }
+  .meniscus { fill: color-mix(in srgb, var(--c-amber) 55%, var(--c-surface)); opacity: .7; }
+  .blink { fill: var(--c-surface); opacity: .5; }
+
+  .label {
+    position: absolute;
+    top: var(--label-top);
+    left: 12%; right: 12%;
+    padding: var(--s-3) var(--s-3) var(--s-4);
+    background: var(--c-surface);
+    color: var(--c-text);
+    border-radius: var(--r-sm);
+    box-shadow: var(--shadow-object);
+    transform: rotate(var(--tilt));
+  }
+  .latin {
+    margin: 0;
+    font: 700 1rem/1.2 var(--f-body);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-accent-text);
+  }
+  .label h3 {
+    margin: var(--s-2) 0 0;
+    font-family: var(--f-body);
+    font-weight: 700;
+    font-size: var(--t-h3);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+  .detail {
+    margin: var(--s-2) 0 0;
+    font-size: var(--t-small);
+    line-height: 1.4;
+    color: var(--c-muted);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4) var(--s-8);
+    margin-top: var(--s-12);
+  }
+  @media (max-width: 767px) {
+    .actions .btn { width: calc(100vw - 2 * var(--gutter)); max-width: 340px; }
+  }
+</style>

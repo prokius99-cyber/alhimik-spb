@@ -1,0 +1,70 @@
+---
+/**
+ * Меню-бургер: кнопка в углу экрана + полноэкранная панель на <dialog>.
+ * Фокус запирается внутри и возвращается на кнопку, Esc закрывает, фон не прокручивается.
+ *
+ * <Menu items={[{ href: '#catalog', label: 'Каталог' }, …]} side="left" />
+ */
+import { business } from '../data/site';
+interface Item { href: string; label: string }
+interface Props { items: Item[]; side?: 'left' | 'right'; label?: string }
+const { items, side = 'left', label = 'Меню' } = Astro.props;
+const msg = business.links.whatsapp ? `https://wa.me/${business.links.whatsapp}` : business.links.telegram ? `https://t.me/${business.links.telegram}` : business.links.vk;
+---
+<button class:list={['menu-btn', `menu-${side}`]} type="button" aria-label={label} aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu" data-menu-open>
+  Меню
+</button>
+
+<dialog id="site-menu" class="menu-panel" aria-label={label}>
+  <div class="menu-inner">
+    <button class="menu-close" type="button" aria-label="Закрыть меню" data-menu-close>
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <nav aria-label="Разделы">
+      <ul>{items.map((it) => <li><a href={it.href} data-menu-link>{it.label}</a></li>)}</ul>
+    </nav>
+    <div class="menu-contacts">
+      <a href={`tel:${business.phone.e164}`}>{business.phone.display}</a>
+      {msg && <a href={msg} target="_blank" rel="noopener">{business.links.vk && msg === business.links.vk ? 'Написать в VK' : 'Написать'}</a>}
+      {business.address.street && <p>{business.address.street}{business.address.note && `, ${business.address.note}`}</p>}
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dlg = document.getElementById('site-menu') as HTMLDialogElement | null;
+  const open = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  if (dlg && open) {
+    const close = () => dlg.close();
+    open.addEventListener('click', () => { dlg.showModal(); open.setAttribute('aria-expanded', 'true'); document.documentElement.style.overflow = 'hidden'; });
+    dlg.addEventListener('close', () => { open.setAttribute('aria-expanded', 'false'); document.documentElement.style.overflow = ''; open.focus(); });
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    dlg.querySelector('[data-menu-close]')?.addEventListener('click', close);
+    dlg.querySelectorAll('[data-menu-link]').forEach((a) => a.addEventListener('click', close));
+  }
+</script>
+
+<style>
+  .menu-btn {
+    flex: none; min-height: 44px; min-width: 44px; padding: 0 var(--s-3); white-space: nowrap;
+    border: 0; border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--c-surface) 80%, transparent); color: var(--c-text); font: 600 1rem var(--f-body); cursor: pointer;
+  }
+  .menu-btn:hover { color: var(--c-accent-text); }
+
+  .menu-panel {
+    width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0;
+    background: var(--c-bg); color: var(--c-text);
+  }
+  .menu-panel::backdrop { background: rgb(0 0 0 / 0.4); }
+  .menu-panel[open] { animation: menu-in var(--d-state) var(--e-out); }
+  @keyframes menu-in { from { opacity: 0; } }
+  .menu-inner { min-height: 100%; display: grid; align-content: center; gap: var(--s-12); padding: var(--s-16) var(--gutter); box-sizing: border-box; }
+  .menu-close { position: absolute; top: var(--s-3); right: var(--s-3); width: var(--tap); height: var(--tap); display: grid; place-items: center; border: 0; border-radius: var(--r-md); background: var(--c-surface); border: 0; color: var(--c-text); cursor: pointer; }
+  nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  nav a { display: inline-flex; min-height: var(--tap); align-items: center; font: 400 var(--t-h2)/1.05 var(--f-display); text-decoration: none; padding-block: var(--s-1); color: var(--c-text); }
+  nav a:hover { color: var(--c-accent-text); }
+  .menu-contacts { display: grid; gap: var(--s-2); color: var(--c-muted); }
+  .menu-contacts a { min-height: var(--tap); display: inline-flex; align-items: center; color: var(--c-text); font-weight: 600; text-decoration: none; }
+  .menu-contacts p { margin: 0; }
+</style>

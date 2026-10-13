@@ -1,0 +1,86 @@
+/*
+ * Токены иллюстрации «Спуск» (DESIGN.md С1, §8) — часть файла токенов, вынесена отдельно,
+ * чтобы палитра сцены не смешивалась с ролями интерфейса. Значения — из победителя v3.
+ */
+:root {
+  /* небо и город */
+  --sc-sky-0: #0b1020;
+  --sc-sky-1: #10172a;
+  --sc-sky-2: #1b2547;
+  --sc-sky-3: #26335f;
+  --sc-haze: #465caa;
+  --sc-haze-2: #283878;
+  --sc-cloud: #586cb4;
+  --sc-cloud-2: #3c5096;
+  --sc-skyline-1: #141c38;
+  --sc-skyline-2: #0f152b;
+  --sc-skylit: #c98a3c;
+
+  /* фасад и тени */
+  --sc-shade: #060914;
+  --sc-shade-2: #04060e;
+  --sc-shade-3: #050812;
+  --sc-cornice-1: #2b3664;
+  --sc-cornice-2: #161d3a;
+  --sc-cornice-3: #0d1226;
+  --sc-mullion: #05070f;
+  --sc-mullion-2: #080b16;
+  --sc-win-dark: #0b1020;
+  --sc-win-frame: #0a0e1d;
+  --sc-win-edge: #1a2342;
+  --sc-win-cold: #1e2c5a;
+  --sc-lit-1: #5e4624;
+  --sc-lit-2: #8a6531;
+  --sc-lit-3: #6b4c26;
+  --sc-lit-inset: #1e1006;
+  --sc-cold-1: #2f3b4a;
+  --sc-cold-2: #445a63;
+  --sc-cold-glow: #78a0aa;
+  --sc-block-1: #1c2444;
+  --sc-block-2: #161d3a;
+  --sc-lintel-1: #2a345f;
+  --sc-lintel-2: #161d3b;
+  --sc-sill-wood: #3a2b24;
+  --sc-sill-low: #171d38;
+
+  /* земля */
+  --sc-pave-1: #171e38;
+  --sc-pave-2: #0e1326;
+  --sc-pave-3: #080b17;
+  --sc-pit-1: #03050c;
+  --sc-pit-2: #070a14;
+  --sc-step-low: #0c1020;
+  --sc-pipe: #1b2440;
+  --sc-mist: #465aa0;
+
+  /* табличка улицы: текст #b9c6e6 к #1b2d63 — 8.3 */
+  --sc-sign-1: #1b2d63;
+  --sc-sign-2: #142251;
+  --sc-sign-edge: #2d3f80;
+  --sc-sign-inner: #15224d;
+  --sc-sign-text: #b9c6e6;
+
+  /* свет */
+  --sc-glow: #ffa03c;
+  --sc-glow-2: #ff781e;
+  --sc-glow-3: #ff6414;
+  --sc-glass: #3a1606;
+  --sc-glass-vig: #140600;
+  --sc-refl: #82a0e6;
+  --sc-dust: #f0dcbe;
+  --sc-door-1: #ffcf80;
+  --sc-door-2: #ff9a30;
+  --sc-door-3: #a24a14;
+  --sc-door-surr-1: #252f56;
+  --sc-door-surr-2: #151c38;
+  --sc-wood-1: #2a1a12;
+  --sc-wood-2: #150d08;
+  --sc-handle: #e0a050;
+  --sc-name-glow: #f2a64a;
+  --sc-flood-0: #ffd48a;
+  --sc-flood-1: #f0b25f;
+  --sc-flood-2: #d8aa6e;
+
+  /* фактура штукатурки зоны «подвал»: пятна краски знаков #5b4128 с прозрачностью ~12 % (DESIGN.md §6) */
+  --tex-plaster: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='4' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .357  0 0 0 0 .255  0 0 0 0 .157  0 0 0 .264 -.072'/></filter><rect width='400' height='400' filter='url(%23n)'/></svg>");
+}

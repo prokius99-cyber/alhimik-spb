@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./tokens-scene.css";
+
+/* Классы Tailwind, связанные с токенами: bg-bg, text-text, text-muted, bg-accent, rounded-lg … */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-border: var(--c-border);
+  --color-accent: var(--c-accent);
+  --color-on-accent: var(--c-on-accent);
+  --color-accent-text: var(--c-accent-text);
+  --color-secondary: var(--c-secondary);
+  --color-danger: var(--c-danger);
+  --font-display: var(--f-display);
+  --font-body: var(--f-body);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+}
+
+@layer base {
+  html { color-scheme: dark; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--f-body);
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+  h1, h2 { font-weight: 400; }
+  h2 { font-size: var(--t-h2); line-height: var(--t-h2-lh); }
+  h3 { font-family: var(--f-body); font-weight: 700; letter-spacing: 0.01em; }
+  h3 { font-size: var(--t-h3); line-height: 1.2; }
+  p { text-wrap: pretty; overflow-wrap: anywhere; }
+  img, video, svg, canvas { display: block; max-width: 100%; }
+  img { height: auto; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--c-accent-text); outline-offset: 3px; }
+  ::selection { background: var(--c-accent); color: var(--c-on-accent); }
+}
+
+@layer components {
+  .container-x { width: min(100% - 2 * var(--gutter), var(--content-max)); margin-inline: auto; }
+  .section-y { padding-block: var(--section-y); }
+  /* Основная кнопка «Занять стол» (DESIGN.md §4). Цвета — роли зоны (улица / подвал). */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: var(--btn-h); padding: 0 46px;
+    background: var(--c-accent); color: var(--c-on-accent); border-radius: var(--r-sm); text-decoration: none;
+    font: 700 var(--t-btn)/1 var(--f-body); letter-spacing: var(--t-btn-ls); text-transform: uppercase;
+    box-shadow: var(--glow-btn); transition: background-color var(--d-micro) var(--e-out), transform var(--d-micro) var(--e-out);
+  }
+  .btn:hover { background: var(--c-accent-hover); }
+  .btn:active { transform: translateY(1px); }
+  /* Вторичная ссылка: свет зоны, подчёркивание только на hover. */
+  .link {
+    display: inline-flex; align-items: center; min-height: 44px; color: var(--c-accent-text); font-weight: 600;
+    text-decoration: none; text-underline-offset: 5px;
+  }
+  .link:hover { text-decoration: underline; }
+  .muted { color: var(--c-muted); }
+  .nowrap { white-space: nowrap; }
+  .num { font-variant-numeric: tabular-nums; }
+  /* Зона «подвал»: фон и текст берутся из переопределённых ролей. */
+  [data-zone="cellar"] { background: var(--tex-plaster), var(--c-bg); color: var(--c-text); }
+  .skip-link { position: absolute; left: var(--s-4); top: -100px; z-index: 100; padding: var(--s-3) var(--s-4); background: var(--c-text); color: var(--c-bg); border-radius: var(--r-sm); }
+  .skip-link:focus { top: var(--s-4); }
+  /* Появление по скроллу: один раз, без бесконечных анимаций. Скрипт — в Reveal.astro. */
+  [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity var(--d-enter) var(--e-out), transform var(--d-enter) var(--e-out); }
+  [data-reveal].is-in { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}

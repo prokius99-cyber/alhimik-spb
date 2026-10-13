@@ -1,0 +1,81 @@
+---
+/**
+ * Базовый макет: мета, Open Graph, canonical, JSON-LD, noindex для демо, ссылка «к содержанию».
+ * Шрифты подключаются в <slot name="head" /> (самохостинг woff2 + preload начертания первого экрана).
+ */
+import '@fontsource/oranienbaum/cyrillic-400.css';
+import '@fontsource-variable/ysabeau-office/wght.css';
+import '../styles/global.css';
+import oranienbaum from '@fontsource/oranienbaum/files/oranienbaum-cyrillic-400-normal.woff2?url';
+import ysabeau from '@fontsource-variable/ysabeau-office/files/ysabeau-office-cyrillic-wght-normal.woff2?url';
+import { business, isDemo } from '../data/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const {
+  title = `${business.name} — ${business.tagline}`,
+  description = business.description,
+  ogImage = `${base}/og.jpg`,
+  noindex = isDemo,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = new URL(ogImage, Astro.site);
+
+const schemaHours = business.hours.length ? { openingHours: business.hours } : {};
+const sameAs = [business.links.vk, business.links.telegram && `https://t.me/${business.links.telegram}`, business.links.yandexMaps, business.links.twoGis].filter(Boolean);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': business.schemaType,
+  name: business.name,
+  description: business.description,
+  url: Astro.site?.href,
+  telephone: business.phone.e164,
+  ...(business.email ? { email: business.email } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.address.street,
+    addressLocality: business.address.city,
+    ...(business.address.region ? { addressRegion: business.address.region } : {}),
+    ...(business.address.postalCode ? { postalCode: business.address.postalCode } : {}),
+    addressCountry: 'RU',
+  },
+  ...(business.geo.lat ? { geo: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lon } } : {}),
+  ...schemaHours,
+  ...(sameAs.length ? { sameAs } : {}),
+};
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <meta name="theme-color" content={business.themeColor} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={og} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="preload" href={oranienbaum} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={ysabeau} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К содержанию</a>
+    <slot />
+  </body>
+</html>

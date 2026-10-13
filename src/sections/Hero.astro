@@ -1,0 +1,341 @@
+---
+/**
+ * Первый экран — сцена «Спуск» (DESIGN.md §5 hero, §8, С1). Победитель v3, выбран заказчиком.
+ * Ночной тротуар Туристской, светящееся подвальное окно с настоящей полкой бара, ступени к двери.
+ * Скролл: камера приближается к двери, створки открываются, свет заливает экран — под ним штукатурка lab.
+ * ≤ 767px окно одной рамой без переплёта и с крупным кадром банок (ПРИОРИТЕТ заказчика).
+ */
+import { getImage } from 'astro:assets';
+import cover from '../assets/photos/vk-cover.jpg';
+import shelf from '../assets/photos/flask-shelf.jpg';
+import logo from '../../assets/logo.png';
+import Menu from '../components/Menu.astro';
+import { business } from '../data/site';
+
+const wide = await getImage({ src: cover, width: 1590, format: 'webp', quality: 80 });
+const narrow = await getImage({ src: shelf, width: 640, format: 'webp', quality: 80 });
+const mark = await getImage({ src: logo, width: 60, format: 'webp' });
+
+const nav = [
+  { href: '#lab', label: 'Внутри' },
+  { href: '#elixirs', label: 'Что наливают' },
+  { href: '#reviews', label: 'Отзывы' },
+  { href: '#banquets', label: 'Зал под праздник' },
+  { href: '#visit', label: 'Как найти' },
+];
+---
+<section id="hero" data-section="hero" aria-labelledby="hero-title" class="hero" data-descent>
+  <div class="stage" data-stage>
+    <header class="top" data-top>
+      <a class="ph" href={`tel:${business.phone.e164}`}>
+        <img src={mark.src} alt="" width="30" height="39" />
+        <span class="num nowrap">{business.phone.display}</span>
+      </a>
+      <span class="top-r">
+        <span class="nowrap top-hours">до&nbsp;{business.closesAt}</span>
+        <Menu side="right" items={nav} />
+      </span>
+    </header>
+
+    <div class="world" data-world>
+      <div class="sky" aria-hidden="true"><div class="cloud a"></div><div class="cloud b"></div></div>
+
+      <svg class="skyline" viewBox="0 0 1440 230" preserveAspectRatio="none" aria-hidden="true">
+        <path class="sk1" d="M0 230V120h60V96l24-14 24 14v24h50V70h46v50h40V140h70V90h12V70h34v20h14v60h90V110h60V84l28-18 28 18v26h70V150h80V100h50V60h22v40h28v40h110V112h40V88l26-16 26 16v24h60V140h80V96h10V76h30v20h10v54h120V120h56V90l22-12 22 12v30h60V84h40v36h50V150h110V104h40V86h28v18h18v46h60V230z"/>
+        <path class="sk2" d="M0 230V170h100V150h60v20h120V138h70v32h160V160h90V130h60v40h140V150h110v20h130V142h80v28h150V150h90V120h60v50h140V152h70V176h90V230z"/>
+        <g class="sklit">
+          <rect x="346" y="106" width="9" height="12"/><rect x="772" y="120" width="9" height="12"/><rect x="1058" y="88" width="9" height="12"/><rect x="1262" y="94" width="9" height="12" opacity=".6"/><rect x="214" y="150" width="9" height="12" opacity=".5"/>
+        </g>
+      </svg>
+
+      <div class="wall" aria-hidden="true">
+        <svg>
+          <defs>
+            <filter id="stucco" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency=".007 .012" numOctaves="4" seed="5" result="p"/>
+              <feColorMatrix in="p" type="matrix" values="0.24 0 0 0 .075  0.27 0 0 0 .095  0.40 0 0 0 .20  0 0 0 0 1" result="base"/>
+              <feTurbulence type="fractalNoise" baseFrequency=".95" numOctaves="2" seed="2" result="g"/>
+              <feColorMatrix in="g" type="matrix" values="0.3 0 0 0 .72  0.3 0 0 0 .72  0.3 0 0 0 .72  0 0 0 0 1" result="gr"/>
+              <feBlend in="base" in2="gr" mode="multiply" result="b2"/>
+              <feComponentTransfer in="b2"><feFuncR type="linear" slope="1.25"/><feFuncG type="linear" slope="1.25"/><feFuncB type="linear" slope="1.2"/></feComponentTransfer>
+            </filter>
+          </defs>
+          <rect width="100%" height="100%" filter="url(#stucco)"/>
+        </svg>
+      </div>
+      <div class="cornice" aria-hidden="true"></div>
+      <span class="tw lit l1" aria-hidden="true"></span><span class="tw l2" aria-hidden="true"></span><span class="tw l3" aria-hidden="true"></span><span class="tw lit2 l4" aria-hidden="true"></span>
+      <span class="tw r1" aria-hidden="true"></span><span class="tw lit r2" aria-hidden="true"></span><span class="tw lit r3" aria-hidden="true"></span><span class="tw r4" aria-hidden="true"></span>
+
+      <div class="ground">
+        <div class="pipe" aria-hidden="true"></div>
+        <div class="plinth" aria-hidden="true"></div>
+        <div class="pave" aria-hidden="true">
+          <svg><filter id="asph" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 .55  0 0 0 0 .62  0 0 0 0 .85  0 0 0 .55 -.18"/></filter><rect width="100%" height="100%" filter="url(#asph)" opacity=".5"/></svg>
+        </div>
+        <div class="spill" aria-hidden="true"></div>
+        <div class="puddle" aria-hidden="true"></div>
+
+        <p class="sign">Туристская ул.</p>
+        <div class="win2" aria-hidden="true"><i></i><b></b></div>
+
+        <div class="pit" aria-hidden="true">
+          <div class="step s1"></div><div class="step s2"></div><div class="step s3"></div><div class="step s4"></div>
+        </div>
+        <div class="railing" aria-hidden="true"></div>
+        <div class="door" data-door aria-hidden="true">
+          <div class="surr"></div>
+          <div class="in"></div>
+          <div class="leaf l" data-leaf></div><div class="leaf r" data-leaf></div>
+          <div class="doorsill"></div>
+        </div>
+
+        <div class="win">
+          <div class="lintel" aria-hidden="true"></div>
+          <div class="frame">
+            <div class="glass">
+              <picture>
+                <source media="(max-width: 767px)" srcset={narrow.src} width="640" height="640" />
+                <img src={wide.src} width="1590" height="400" alt="Полка с аптекарскими банками: этикетки SACHARUM и ACIDUM FORMICORUM, внутри горит свет" fetchpriority="high" decoding="async" />
+              </picture>
+              <div class="refl" aria-hidden="true"></div><div class="dust" aria-hidden="true"></div><div class="vig" aria-hidden="true"></div><div class="bars" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="sill" aria-hidden="true"></div>
+          <div class="win-refl" aria-hidden="true"><img src={wide.src} width="1590" height="400" alt="" decoding="async" /></div>
+        </div>
+      </div>
+
+      <div class="mist" aria-hidden="true"></div>
+
+      <div class="stack" data-stack>
+        <p class="eyebrow">ваша таверна</p>
+        <h1 id="hero-title" class="name">Алхимик</h1>
+        <p class="where">в&nbsp;цоколе. <b>Вход со&nbsp;стороны Туристской</b></p>
+        <div class="acts">
+          <a class="btn" href={`tel:${business.phone.e164}`} data-cta>Занять стол</a>
+          <a class="link" href="#visit">Как спуститься к&nbsp;нам</a>
+        </div>
+      </div>
+    </div>
+    <div class="vignette" data-vignette aria-hidden="true"></div>
+    <div class="grain" data-grain aria-hidden="true"></div>
+    <div class="flood" data-flood aria-hidden="true"></div>
+    <div class="fill" data-fill aria-hidden="true"></div>
+  </div>
+</section>
+
+<script>
+  // Спуск (DESIGN.md С1): только transform/opacity по прогрессу скролла hero, без перехвата скролла.
+  const hero = document.querySelector<HTMLElement>('[data-descent]');
+  const weak = matchMedia('(prefers-reduced-motion: reduce)').matches
+    // saveData есть не во всех браузерах — отсюда необязательная цепочка
+    || (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true
+    || (navigator.hardwareConcurrency ?? 4) <= 2;
+  if (hero && !weak) {
+    hero.classList.add('is-live');
+    const stage = hero.querySelector<HTMLElement>('[data-stage]')!; // элементы разметки выше, всегда есть
+    const world = hero.querySelector<HTMLElement>('[data-world]')!;
+    const stack = hero.querySelector<HTMLElement>('[data-stack]')!;
+    const flood = hero.querySelector<HTMLElement>('[data-flood]')!;
+    const door = hero.querySelector<HTMLElement>('[data-door]')!;
+    const leaves = hero.querySelectorAll<HTMLElement>('[data-leaf]');
+    const top = hero.querySelector<HTMLElement>('[data-top]')!;
+    const fill = hero.querySelector<HTMLElement>('[data-fill]')!;
+    const vignette = hero.querySelector<HTMLElement>('[data-vignette]')!;
+    const grain = hero.querySelector<HTMLElement>('[data-grain]')!;
+    const grainBase = parseFloat(getComputedStyle(grain).opacity);
+    const root = document.documentElement;
+    const zoom = parseFloat(getComputedStyle(hero).getPropertyValue('--descent-zoom')) || 3;
+    const cl = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const span = hero.offsetHeight - stage.offsetHeight;
+      const p = cl(-hero.getBoundingClientRect().top / span);
+      world.style.transform = `scale(${1 + (zoom - 1) * p * p})`;
+      stack.style.opacity = String(cl(1 - p * 3.2));
+      // погасшая стопка не должна ловить тапы; дальше звонок — закреплённой кнопкой
+      stack.style.visibility = p > 0.3 ? 'hidden' : '';
+      root.toggleAttribute('data-descent-past', p > 0.3);
+      const o = cl((p - 0.22) / 0.3);
+      leaves.forEach((l) => { l.style.transform = `scaleX(${1 - o * 0.9})`; });
+      const f = cl((p - 0.42) / 0.5);
+      flood.style.transform = `scale(${f * f})`;
+      top.style.opacity = String(cl(1 - f * 2.5));
+      const fo = cl((f - 0.7) / 0.3);
+      fill.style.opacity = String(fo);
+      grain.style.opacity = String(grainBase * (1 - fo));
+      vignette.style.opacity = String(cl(1 - (f - 0.6) / 0.4));
+      top.style.visibility = f > 0.4 ? 'hidden' : '';
+    };
+    const measure = () => {
+      world.style.transform = 'none';
+      const s = stage.getBoundingClientRect(), d = door.getBoundingClientRect();
+      const ox = d.left - s.left + d.width / 2, oy = d.top - s.top + d.height * 0.55;
+      world.style.transformOrigin = `${ox}px ${oy}px`;
+      flood.style.left = `${ox}px`;
+      flood.style.top = `${oy}px`;
+      update();
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', measure);
+    addEventListener('load', measure);
+    measure();
+  }
+</script>
+
+<style>
+  .hero { --gh: 400px; --pv: 250px; --tw: 23%; --gs: 1; --top: calc(100% - var(--gh) * var(--gs)); position: relative; background: var(--c-bg); }
+  .hero.is-live { height: var(--descent-h); }
+  .stage { position: relative; height: 100svh; min-height: 760px; overflow: hidden; background: var(--c-bg); }
+  .is-live .stage { position: sticky; top: 0; }
+
+  /* шапка — часть сцены */
+  .top { position: absolute; z-index: 50; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-3) var(--gutter); color: var(--c-muted); font-size: 1.0625rem; }
+  .ph { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-weight: 600; letter-spacing: 0.02em; color: var(--c-muted); }
+  .ph img { width: 30px; height: auto; filter: invert(1) sepia(.5) saturate(2.4) hue-rotate(-12deg) brightness(.95); }
+  .ph:hover { color: var(--c-text); }
+  .top-r { display: inline-flex; align-items: center; gap: var(--s-4); }
+
+  .world { position: absolute; inset: 0; will-change: transform; }
+  .sky { position: absolute; inset: 0; background:
+    radial-gradient(60% 50% at 80% 8%, color-mix(in srgb, var(--sc-haze) 42%, transparent), transparent 70%),
+    radial-gradient(50% 40% at 12% 30%, color-mix(in srgb, var(--sc-haze-2) 30%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--sc-sky-0) 0%, var(--sc-sky-1) 38%, var(--sc-sky-2) 78%, var(--sc-sky-3) 100%); }
+  .cloud { position: absolute; border-radius: 50%; filter: blur(34px); background: color-mix(in srgb, var(--sc-cloud) 22%, transparent); }
+  .cloud.a { left: 8%; top: 14%; width: 34%; height: 70px; }
+  .cloud.b { right: 6%; top: 30%; width: 30%; height: 56px; background: color-mix(in srgb, var(--sc-cloud-2) 20%, transparent); }
+  .skyline { position: absolute; left: 0; right: 0; bottom: calc(var(--gh) * var(--gs) - 6px); height: 230px; width: 100%; }
+  .sk1 { fill: var(--sc-skyline-1); } .sk2 { fill: var(--sc-skyline-2); } .sklit { fill: var(--sc-skylit); opacity: .55; }
+
+  .wall { position: absolute; inset: 0; clip-path: polygon(0 0, var(--tw) 0, var(--tw) var(--top), calc(100% - var(--tw)) var(--top), calc(100% - var(--tw)) 0, 100% 0, 100% 100%, 0 100%); }
+  .wall svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .wall::after { content: ""; position: absolute; inset: 0; background:
+    linear-gradient(180deg, color-mix(in srgb, var(--sc-shade) 55%, transparent), transparent 30%),
+    radial-gradient(ellipse 36% 55% at 50% 100%, transparent, color-mix(in srgb, var(--sc-shade-3) 50%, transparent)); }
+  .wall::before { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, transparent calc(var(--tw) - 9%), color-mix(in srgb, var(--sc-shade-2) 62%, transparent) calc(var(--tw) - 1%), transparent calc(var(--tw) + 7%), transparent calc(100% - var(--tw) - 7%), color-mix(in srgb, var(--sc-shade-2) 62%, transparent) calc(100% - var(--tw) + 1%), transparent calc(100% - var(--tw) + 9%)); }
+  .cornice { position: absolute; left: var(--tw); right: var(--tw); top: var(--top); height: 18px; background: linear-gradient(180deg, var(--sc-cornice-1), var(--sc-cornice-2) 60%, var(--sc-cornice-3)); box-shadow: var(--shadow-object); }
+  .tw { position: absolute; width: clamp(48px, 5.4vw, 78px); height: clamp(90px, 15vh, 132px); background: var(--sc-win-dark); box-shadow: inset 0 6px 10px var(--sc-shade-2); }
+  .tw::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent calc(50% - 2px), var(--sc-mullion) calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(180deg, transparent 58%, var(--sc-mullion) 58% calc(58% + 4px), transparent calc(58% + 4px)); }
+  .tw.lit { background: linear-gradient(180deg, var(--sc-lit-1), var(--sc-lit-2) 70%, var(--sc-lit-3)); box-shadow: inset 0 8px 12px color-mix(in srgb, var(--sc-lit-inset) 70%, transparent), 0 0 26px 4px color-mix(in srgb, var(--sc-glow) 22%, transparent); }
+  .tw.lit2 { background: linear-gradient(180deg, var(--sc-cold-1), var(--sc-cold-2)); box-shadow: inset 0 8px 12px var(--sc-shade-2), 0 0 18px 2px color-mix(in srgb, var(--sc-cold-glow) 12%, transparent); }
+  .l1 { left: 5%; top: 70px; } .l2 { left: 14.5%; top: 70px; } .l3 { left: 5%; top: 255px; } .l4 { left: 14.5%; top: 255px; }
+  .r1 { right: 5%; top: 70px; } .r2 { right: 14.5%; top: 70px; } .r3 { right: 5%; top: 255px; } .r4 { right: 14.5%; top: 255px; }
+
+  .ground { position: absolute; left: calc(50% - 50% / var(--gs)); width: calc(100% / var(--gs)); bottom: 0; height: var(--gh); transform: scale(var(--gs)); transform-origin: 50% 100%; }
+  .plinth { position: absolute; left: 0; right: 0; top: calc(var(--pv) - 38px); height: 38px; background:
+    repeating-linear-gradient(90deg, var(--sc-block-1) 0 88px, var(--sc-mullion) 88px 93px, var(--sc-block-2) 93px 184px, var(--sc-mullion) 184px 190px); }
+  .pave { position: absolute; left: 0; right: 0; top: var(--pv); bottom: 0; background: linear-gradient(180deg, var(--sc-pave-1) 0, var(--sc-pave-2) 45%, var(--sc-pave-3) 100%); }
+  .pave svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .spill { position: absolute; left: calc(50% + 110px); top: 130px; width: 1100px; height: 640px; transform: translate(-50%, -50%); background: radial-gradient(ellipse at center, color-mix(in srgb, var(--sc-glow) 46%, transparent), color-mix(in srgb, var(--sc-glow-2) 20%, transparent) 34%, color-mix(in srgb, var(--sc-glow-3) 5%, transparent) 60%, transparent 72%); mix-blend-mode: screen; pointer-events: none; animation: ignite var(--d-ignite) ease-out both; }
+  .puddle { position: absolute; top: calc(var(--pv) + 52px); left: calc(50% - 20px); width: 560px; height: 46px; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--sc-glow) 34%, transparent), color-mix(in srgb, var(--sc-glow-2) 10%, transparent) 55%, transparent 72%); mix-blend-mode: screen; filter: blur(4px); animation: ignite var(--d-ignite) ease-out both; }
+
+  .sign { position: absolute; left: calc(50% - 600px); top: 30px; margin: 0; width: 236px; height: 58px; display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(180deg, var(--sc-sign-1), var(--sc-sign-2)); color: var(--sc-sign-text); font: 600 1.0625rem/1 var(--f-body); letter-spacing: 0.04em; border-radius: 5px; box-shadow: inset 0 0 0 3px var(--sc-sign-inner), inset 0 0 0 4px var(--sc-sign-edge), var(--shadow-object); }
+
+  .win { position: absolute; left: calc(50% - 90px); top: 42px; width: var(--win-w); height: var(--win-h); z-index: 6; }
+  .win::before { content: ""; position: absolute; inset: -4px; border-radius: var(--r-md); box-shadow: var(--glow-window); animation: ignite var(--d-ignite) ease-out both; }
+  .lintel { position: absolute; left: -18px; right: -18px; top: -20px; height: 24px; background: linear-gradient(180deg, var(--sc-lintel-1), var(--sc-lintel-2) 70%, var(--sc-win-dark)); border-radius: var(--r-md) var(--r-md) 0 0; box-shadow: var(--shadow-object); }
+  .sill { position: absolute; left: -22px; right: -22px; bottom: -14px; height: 16px; background: linear-gradient(180deg, color-mix(in srgb, var(--sc-glow) 55%, transparent), var(--sc-sill-wood) 40%, var(--sc-sill-low)); border-radius: 0 0 var(--r-md) var(--r-md); box-shadow: var(--shadow-object); }
+  .frame { position: absolute; inset: 0; background: var(--c-frame); padding: 9px; box-shadow: inset 0 0 0 1px var(--sc-win-edge); }
+  .glass { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--sc-glass); animation: ignite var(--d-ignite) ease-out both; }
+  .glass img { position: absolute; left: 0; top: -8%; height: 126%; width: auto; max-width: none; filter: saturate(1.2) brightness(1.12) contrast(1.05); animation: flicker var(--flicker) 1s infinite; }
+  .glass .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, transparent 45%, color-mix(in srgb, var(--sc-glass-vig) 55%, transparent) 100%); box-shadow: inset 0 16px 26px color-mix(in srgb, var(--sc-shade-2) 65%, transparent); }
+  .glass .refl { position: absolute; inset: 0; background: linear-gradient(115deg, color-mix(in srgb, var(--sc-refl) 18%, transparent) 0, color-mix(in srgb, var(--sc-refl) 5%, transparent) 28%, transparent 29%, transparent 60%, color-mix(in srgb, var(--sc-refl) 8%, transparent) 61%, transparent 76%); }
+  .glass .dust { position: absolute; inset: 0; background: radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--sc-dust) 10%, transparent), transparent 30%), radial-gradient(circle at 78% 30%, color-mix(in srgb, var(--sc-dust) 7%, transparent), transparent 26%); mix-blend-mode: screen; }
+  .bars { position: absolute; inset: 0; background:
+    linear-gradient(180deg, transparent calc(56% - 2px), var(--sc-mullion-2) calc(56% - 2px) calc(56% + 2px), transparent calc(56% + 2px)),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(20% - 5px), var(--sc-mullion-2) calc(20% - 5px), var(--sc-mullion-2) 20%);
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--sc-glow) 50%, transparent)); }
+  .win-refl { position: absolute; left: 0; top: calc(100% + 10px); width: 100%; height: 130px; overflow: hidden; opacity: .5; transform: scaleY(-1); filter: blur(3px); -webkit-mask-image: linear-gradient(to top, #000 0%, transparent); mask-image: linear-gradient(to top, #000 0%, transparent); pointer-events: none; }
+  .win-refl img { position: absolute; left: 9px; top: 0; height: 160px; width: auto; max-width: none; }
+  .win2 { position: absolute; left: calc(50% + 380px); top: 70px; width: 230px; height: 180px; background: var(--sc-mullion-2); padding: 8px; box-shadow: inset 0 0 0 1px var(--sc-win-edge), var(--shadow-object); }
+  .win2 i { position: absolute; inset: 8px; background: linear-gradient(120deg, color-mix(in srgb, var(--sc-win-cold) 60%, transparent), color-mix(in srgb, var(--sc-win-cold) 25%, transparent) 40%, var(--sc-win-frame) 41%); box-shadow: inset 0 14px 20px color-mix(in srgb, var(--sc-shade-2) 70%, transparent); }
+  .win2 b { position: absolute; inset: 8px; background: radial-gradient(ellipse at 0 70%, color-mix(in srgb, var(--sc-glow-2) 22%, transparent), transparent 60%); }
+  .pipe { position: absolute; left: calc(50% + 650px); top: -10px; width: 14px; height: calc(var(--pv) + 10px); background: linear-gradient(90deg, var(--sc-pit-2), var(--sc-pipe) 40%, var(--sc-pit-2)); }
+
+  .pit { position: absolute; left: calc(50% - 510px); width: 290px; top: calc(var(--pv) - 2px); bottom: -60px; z-index: 4; background: linear-gradient(180deg, var(--sc-pit-1), var(--sc-pit-2)); clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); }
+  .step { position: absolute; background: linear-gradient(180deg, color-mix(in srgb, var(--sc-glow) 55%, transparent), color-mix(in srgb, var(--sc-door-3) 35%, transparent) 22%, var(--sc-step-low) 60%); }
+  .s1 { top: 60px; left: 14%; right: 14%; height: 30px; } .s2 { top: 92px; left: 8%; right: 8%; height: 34px; }
+  .s3 { top: 130px; left: 2%; right: 2%; height: 38px; opacity: .7; } .s4 { top: 172px; left: -4%; right: -4%; height: 44px; opacity: .45; }
+  .door { position: absolute; left: calc(50% - 428px); top: 122px; width: 116px; height: 170px; z-index: 5; }
+  .door .surr { position: absolute; inset: -12px -12px 0; background: linear-gradient(180deg, var(--sc-door-surr-1), var(--sc-door-surr-2)); border-radius: 58px 58px 0 0; box-shadow: inset 0 0 14px color-mix(in srgb, var(--sc-shade-2) 60%, transparent), var(--glow-door); }
+  .door .in { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 100%, var(--sc-door-1), var(--sc-door-2) 45%, var(--sc-door-3)); border-radius: 50px 50px 0 0; animation: ignite var(--d-ignite) ease-out both; }
+  .door .leaf { position: absolute; top: 0; bottom: 3px; width: calc(50% - 1px); background: repeating-linear-gradient(90deg, var(--sc-wood-1) 0, var(--sc-wood-1) 13px, var(--sc-wood-2) 13px, var(--sc-wood-2) 15px); }
+  .door .leaf.l { left: 0; transform-origin: 0 50%; border-radius: 50px 0 0 0; }
+  .door .leaf.r { right: 0; transform-origin: 100% 50%; border-radius: 0 50px 0 0; }
+  .door .leaf::after { content: ""; position: absolute; top: 60%; width: 6px; height: 6px; border-radius: 50%; background: var(--sc-handle); box-shadow: 0 0 6px var(--sc-name-glow); }
+  .door .leaf.l::after { right: 6px; } .door .leaf.r::after { left: 6px; }
+  .door .doorsill { position: absolute; left: -16px; right: -16px; bottom: -4px; height: 8px; background: linear-gradient(180deg, color-mix(in srgb, var(--sc-glow) 65%, transparent), transparent); filter: blur(2px); }
+  .railing { position: absolute; left: calc(50% - 330px); top: calc(var(--pv) - 54px); width: 3px; height: 70px; background: var(--sc-mullion); z-index: 6; }
+  .mist { position: absolute; left: 0; right: 0; top: calc(100% - (var(--gh) - var(--pv)) * var(--gs) - 90px); height: 200px; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--sc-mist) 12%, transparent) 50%, transparent); pointer-events: none; z-index: 8; animation: drift 14s ease-in-out infinite alternate; }
+
+  /* текст */
+  .stack { position: absolute; left: 0; right: 0; top: 84px; z-index: 20; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 var(--s-4); }
+  .eyebrow { margin: 0; font: 600 var(--t-label)/1.2 var(--f-body); letter-spacing: var(--t-label-ls); text-transform: uppercase; color: var(--c-accent-text); animation: rise var(--d-enter) 80ms var(--e-out) both; }
+  .name { font: 400 var(--t-hero)/var(--t-hero-lh) var(--f-display); margin: 10px 0 0; padding-bottom: .08em; color: var(--c-text); text-shadow: 0 18px 40px color-mix(in srgb, var(--sc-name-glow) 18%, transparent); animation: rise var(--d-enter) 120ms var(--e-out) both; }
+  .where { margin: 6px 0 0; font-size: var(--t-lead); line-height: 1.35; color: var(--c-muted); animation: rise var(--d-enter) 200ms var(--e-out) both; }
+  .where b { color: var(--c-text); font-weight: 600; }
+  .acts { margin-top: 26px; display: flex; flex-direction: column; align-items: center; gap: 6px; animation: rise var(--d-enter) 280ms var(--e-out) both; }
+  .acts .link { font-size: var(--t-body); letter-spacing: .04em; }
+
+  .grain { position: absolute; inset: 0; z-index: 30; pointer-events: none; opacity: var(--grain-opacity); mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.6 -.3'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E"); }
+  .vignette { position: absolute; inset: 0; z-index: 29; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, transparent 55%, color-mix(in srgb, var(--sc-shade-2) 55%, transparent) 100%); }
+  .flood { position: absolute; z-index: 25; left: 0; top: 0; width: 300vmax; height: 300vmax; margin: -150vmax 0 0 -150vmax; border-radius: 50%; background: radial-gradient(circle, var(--sc-flood-0) 0, var(--sc-flood-1) 12%, var(--sc-flood-2) 35%, var(--c-plaster) 55%, transparent 70%); transform: scale(0); pointer-events: none; will-change: transform; }
+  /* финальный кадр спуска = верх lab: та же штукатурка с фактурой, без шва */
+  .fill { position: absolute; z-index: 26; inset: 0; background: var(--tex-plaster), var(--c-plaster); opacity: 0; pointer-events: none; }
+
+  @keyframes ignite { from { opacity: .12; } to { opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes drift { from { transform: translateX(-2%); } to { transform: translateX(2%); } }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 45% { opacity: .93; } 60% { opacity: 1; } 78% { opacity: .96; } }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sign { left: var(--gutter); }
+    .door { left: calc(var(--gutter) + 40px); }
+    .pit { left: calc(var(--gutter) - 42px); }
+    .railing { left: calc(var(--gutter) + 138px); }
+    .win { left: calc(var(--gutter) + 240px); }
+  }
+  /* короткие экраны ноутбуков (1366×768, 1280×720): земля мельче, стопка плотнее — текст не ложится на окно */
+  @media (min-width: 768px) and (max-height: 880px) {
+    .hero { --gs: 0.82; }
+    .stage { min-height: 700px; }
+    .stack { top: 64px; }
+    .name { font-size: min(clamp(4rem, 20vw, 11.875rem), 17svh); margin-top: 6px; }
+    .acts { margin-top: 16px; }
+  }
+
+  /* телефон: окно одной рамой без переплёта, крупный кадр банок (ПРИОРИТЕТ) */
+  @media (max-width: 767px) {
+    .hero { --gh: 410px; --pv: 240px; --tw: 0%; }
+    .top { font-size: 1rem; padding: var(--s-2) 14px; gap: var(--s-2); }
+    .ph img { width: 26px; }
+    .stack { top: 70px; }
+    .name { margin-top: 6px; }
+    .where { max-width: 21em; }
+    .acts { margin-top: 18px; }
+    .acts .btn { width: calc(100vw - 32px); max-width: 340px; }
+    .tw, .win2, .pipe, .cornice { display: none; }
+    .skyline { height: 150px; }
+    .sign { left: 14px; top: 10px; width: 150px; height: 44px; font-size: 1rem; }
+    .win { left: auto; right: 14px; top: 78px; }
+    .bars { display: none; }
+    .glass img { left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; transform: scale(1.25); transform-origin: 50% 62%; }
+    .win-refl { height: 90px; }
+    .win-refl img { height: 110px; }
+    .spill { left: 70%; top: 140px; width: 640px; height: 420px; opacity: .7; }
+    .puddle { left: 30%; width: 300px; }
+    .pit { left: 2px; width: 170px; }
+    .door { left: 30px; top: 108px; width: 80px; height: 150px; }
+    .railing { left: 128px; }
+    .sill { left: -14px; right: -14px; }
+  }
+  @media (max-width: 767px) and (max-height: 700px) { .stack { top: 62px; } }
+  @media (max-width: 359px) { .door { left: 18px; width: 70px; } .pit { width: 140px; } .railing { display: none; } .top-hours { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spill, .puddle, .win::before, .glass, .glass img, .door .in, .eyebrow, .name, .where, .acts, .mist { animation: none; }
+  }
+</style>
